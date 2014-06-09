@@ -42,6 +42,8 @@ namespace CursorAreaLock
         private User32.POINT _cursorPos;
         private User32.RECT _defaultCursorBounds;
         private User32.RECT _currentWindowBounds;
+        private User32.WINDOWINFO _currentWindowInfo;
+        private User32.RECT _currentClientBounds;
 
         private IntPtr m_hhook;
         private User32.WinEventDelegate _procDelegate;
@@ -49,6 +51,8 @@ namespace CursorAreaLock
         public User32.POINT CursorPosition { get { return _cursorPos; } }
         public User32.RECT DefaultCursorBounds { get { return _defaultCursorBounds; } }
         public User32.RECT CurrentWindowBounds { get { return _currentWindowBounds; } }
+        public User32.WINDOWINFO CurrentWindowInfo { get { return _currentWindowInfo; } }
+        public User32.RECT CurrentClientBounds { get { return _currentClientBounds; } }
 
         public bool Active { get { return _serviceState; } set { _serviceState = value; } }
         public bool IsLockActive { get { return _lockState; } }
@@ -112,7 +116,7 @@ namespace CursorAreaLock
 
                 //get current window with focus ...
                 CurrentWindowHandle = User32.GetForegroundWindow();
-                if (CurrentWindowHandle == null) return;
+                if (CurrentWindowHandle == IntPtr.Zero) return;
 
                 if (keys_AltTab) _altTabWindowHandle = CurrentWindowHandle;
 
@@ -196,7 +200,18 @@ namespace CursorAreaLock
             if (IsCurrentExecutableMatching)
             {
                 //reacalc current window bounds ...
-                User32.GetWindowRect(CurrentWindowHandle, out _currentWindowBounds);
+                User32.GetWindowInfo(CurrentWindowHandle, out _currentWindowInfo);
+                _currentWindowBounds = _currentWindowInfo.rcWindow;
+
+                User32.GetWindowLong(CurrentWindowHandle, User32.GWL_STYLE);
+                int style = User32.GetWindowLong(CurrentWindowHandle, User32.GWL_STYLE);
+                if ((style & User32.WS_MAXIMIZE) == User32.WS_MAXIMIZE)
+                {
+                    _currentWindowBounds.Left = _currentWindowInfo.rcWindow.Left + (int) _currentWindowInfo.cxWindowBorders;
+                    _currentWindowBounds.Right = _currentWindowInfo.rcWindow.Right - (int) _currentWindowInfo.cxWindowBorders;
+                    _currentWindowBounds.Top = _currentWindowInfo.rcWindow.Top + (int)  _currentWindowInfo.cyWindowBorders;
+                    _currentWindowBounds.Bottom = _currentWindowInfo.rcWindow.Bottom - (int)  _currentWindowInfo.cyWindowBorders;
+                }
 
                 //activate cursor lock if the service is active ...
                 _lockState = _serviceState;

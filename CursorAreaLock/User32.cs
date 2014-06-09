@@ -22,7 +22,19 @@ namespace Microsoft.WinAPI
 
         // Prevents the system from releasing any thread that is waiting for the caller to go idle (see WaitForInputIdle).
         public const uint PM_NOYIELD = 0x0002;
-   
+
+        //windowLong flags
+        public const int GWL_STYLE = -16;
+
+        //window style
+        public const UInt32 WS_MAXIMIZE = 0x1000000;
+
+        [DllImport("user32")]
+        public static extern bool GetWindowInfo(IntPtr hWnd, out WINDOWINFO pwi);
+
+        [DllImport("user32")]
+        public static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+
         [DllImport("user32")]
         public static extern bool PeekMessage(ref MSG lpMsg, IntPtr hWnd, uint wMsgFilterMin, uint wMsgFilterMax, uint wRemoveMsg);
 
@@ -56,8 +68,32 @@ namespace Microsoft.WinAPI
         [DllImport("user32")]
         public static extern bool GetClipCursor(out RECT lpRect);
 
+        [DllImport("user32.dll")]
+        public static extern bool GetClientRect(IntPtr hWnd, out RECT lpRect);
+
         [DllImport("user32")]
-        public static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect); 
+        public static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct WINDOWINFO
+        {
+            public uint cbSize;
+            public RECT rcWindow;
+            public RECT rcClient;
+            public uint dwStyle;
+            public uint dwExStyle;
+            public uint dwWindowStatus;
+            public uint cxWindowBorders;
+            public uint cyWindowBorders;
+            public ushort atomWindowType;
+            public ushort wCreatorVersion;
+
+            public WINDOWINFO(Boolean? filler)
+                : this()   // Allows automatic initialization of "cbSize" with "new WINDOWINFO(null/true/false)".
+            {
+                cbSize = (UInt32)(Marshal.SizeOf(typeof(WINDOWINFO)));
+            }
+        }
 
         [StructLayout(LayoutKind.Sequential)]
         public struct POINT

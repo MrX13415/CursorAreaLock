@@ -25,7 +25,11 @@ namespace System.ConsoleExtentions
                 //print this page ...
                 _printHandler(DataProvider);
             }
-            catch (Exception) {  }
+            catch (Exception ex) {
+
+                Console.WriteLine(ex);
+            
+            }
         }
 
     }

@@ -67,7 +67,7 @@ namespace CursorAreaLock
         public Program()
         {
             Name = "CursorAreaLock";
-            Version = "2.0";
+            Version = "2.1";
             Copyright = "(c) MrX13415 2014";
         }
 
