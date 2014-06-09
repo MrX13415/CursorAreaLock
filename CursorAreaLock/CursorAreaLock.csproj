@@ -93,7 +93,6 @@
   <ItemGroup>
     <None Include="MrX13415.pfx" />
     <None Include="Properties\app.manifest" />
-    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
