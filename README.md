@@ -14,7 +14,7 @@ CreativeCommons Attribution-NonCommercial-ShareAlike 3.0 Unported (CC BY-NC-SA 3
 [More Informations](http://creativecommons.org/licenses/by-nc-sa/3.0/ "About: CC BY-NC-SA 3.0")   
 
 ##Download
-Download CursorLock right here: [Download] (https://github.com/MrX13415/CursorAreaLock/releases) "Download CursorLock"
+Download CursorLock right here: [Download] (https://github.com/MrX13415/CursorAreaLock/releases "Download CursorLock")
 
 ##Changelog
 #####Version: 2.0
